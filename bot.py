@@ -21,6 +21,9 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+# Уменьшаем уровень логирования для httpx (меньше шума от сетевых запросов)
+logging.getLogger('httpx').setLevel(logging.WARNING)
+
 # Подавляем предупреждения о per_message в ConversationHandler
 logging.getLogger('telegram.ext._conversationhandler').setLevel(logging.ERROR)
 
@@ -461,13 +464,24 @@ def clear_webhook_sync(bot_token: str):
 
 async def error_handler(update: object, context: ContextTypes.DEFAULT_TYPE):
     """Обработчик ошибок"""
-    logger.error(f"Exception while handling an update: {context.error}", exc_info=context.error)
+    error = context.error
     
-    if isinstance(context.error, Conflict):
+    # Игнорируем временные сетевые ошибки (они обрабатываются автоматически)
+    if isinstance(error, NetworkError):
+        # Логируем только если это не временная ошибка подключения
+        error_msg = str(error)
+        if "ConnectError" in error_msg or "TimeoutError" in error_msg:
+            logger.debug(f"Временная сетевая ошибка (автоматически обрабатывается): {error}")
+        else:
+            logger.warning(f"Сетевая ошибка: {error}")
+        return
+    
+    # Остальные ошибки логируем полностью
+    if isinstance(error, Conflict):
         logger.error("⚠️  КОНФЛИКТ: Запущен другой экземпляр бота! Остановите все другие процессы бота.")
         logger.error("Попробуйте найти процессы: lsof -i :8443 или проверьте другие терминалы/окна")
-    elif isinstance(context.error, NetworkError):
-        logger.warning(f"Сетевая ошибка: {context.error}. Повторная попытка...")
+    else:
+        logger.error(f"Ошибка при обработке обновления: {error}", exc_info=error)
 
 
 def main():
