@@ -1,0 +1,3 @@
+# Конфигурация бота
+# Скопируйте этот файл в config.py и замените YOUR_BOT_TOKEN на ваш токен от @BotFather
+BOT_TOKEN = "YOUR_BOT_TOKEN"

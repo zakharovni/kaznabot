@@ -1,0 +1,23 @@
+[Unit]
+Description=Income Bot - Telegram бот для учета доходов
+After=network.target
+
+[Service]
+Type=simple
+User=YOUR_USER
+WorkingDirectory=/path/to/KaznaBot
+ExecStart=/usr/bin/python3 /path/to/KaznaBot/bot.py
+Restart=always
+RestartSec=10
+
+# Логирование
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=income-bot
+
+# Ограничения ресурсов (опционально)
+# MemoryLimit=256M
+# CPUQuota=50%
+
+[Install]
+WantedBy=multi-user.target
