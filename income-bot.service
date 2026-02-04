@@ -6,7 +6,7 @@ After=network.target
 Type=simple
 User=YOUR_USER
 WorkingDirectory=/path/to/KaznaBot
-ExecStart=/usr/bin/python3 /path/to/KaznaBot/bot.py
+ExecStart=/path/to/KaznaBot/venv/bin/python /path/to/KaznaBot/bot.py
 Restart=always
 RestartSec=10
 
