@@ -13,7 +13,15 @@ fi
 
 # Проверяем наличие pip
 if ! command -v pip3 &> /dev/null; then
-    echo "❌ pip3 не найден. Установите pip3."
+    echo "❌ pip3 не найден."
+    echo ""
+    echo "Для установки pip3 выполните одну из команд:"
+    echo "  Ubuntu/Debian: sudo apt-get update && sudo apt-get install -y python3-pip"
+    echo "  CentOS/RHEL:   sudo yum install -y python3-pip"
+    echo "  Fedora:        sudo dnf install -y python3-pip"
+    echo ""
+    echo "Или запустите скрипт установки:"
+    echo "  sudo bash install-dependencies.sh"
     exit 1
 fi
 
